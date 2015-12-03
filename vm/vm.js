@@ -80,7 +80,7 @@ function convertDate(msg, callback){
         //Reconstitution du timestamp
         var timestamp = buildTimestamp(message,indexTS,initialTimestamp);
         var bodyMsg = message.substring(indexTS+1,message.length);
-        dataToWrite += initialDate + timestamp +' '+bodyMsg+'\n';
+        dataToWrite += initialDate + timestamp +' '+bodyMsg;
         console.log('dataToWrite',dataToWrite.length)
       }
   }
