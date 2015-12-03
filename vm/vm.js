@@ -35,7 +35,7 @@ var client = dgram.createSocket('udp4');
 client.on('message', function(msg, rinfo) {
   //console.log('Received %d bytes from %s:%d\n', msg.length, rinfo.address, rinfo.port, msg.toString());
   uncomp(msg,function(err,msgUnzip){
-    convertDate(decodeURI(msgUnzip.toString()),
+    convertDate(msgUnzip.toString(),
       writeMessage);
   });
   
