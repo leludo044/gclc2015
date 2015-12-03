@@ -86,6 +86,8 @@ function convertDate(msg, callback){
       }
   }
 
+  dataToWrite = dataToWrite.substring(0, dataToWrite.length-1);
+
   console.log('Donnees transformees : ' + dataToWrite);
 
   callback(dataToWrite);
