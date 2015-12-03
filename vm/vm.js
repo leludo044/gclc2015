@@ -26,16 +26,19 @@ var dgram = require('dgram');
 var os = require('os');
 var fs = require('fs');
 
-var fileName = "/opt/gclc/gclc.log";
+//var fileName = "/opt/gclc/gclc.log";
+var fileName = "./gclc.log";
 
 var initialTimestamp = null;  
 var initialDate = "";
 
+var messages = "";
 var client = dgram.createSocket('udp4');
-client.on('message', function(msg, rinfo) {
-  //console.log('Received %d bytes from %s:%d\n', msg.length, rinfo.address, rinfo.port, msg.toString());
-  convertDate(msg.toString(),writeMessage);
-  
+client.on('message', function (msg, rinfo) {
+    //console.log('Received %d bytes from %s:%d\n', msg.length, rinfo.address, rinfo.port, msg.toString());
+
+    convertDate(msg.toString(), bufferMessage);
+
 });
 client.bind(PORT) ;
 
@@ -77,4 +80,21 @@ var formatDay = function (date) {
   var stringDate= new String(date);
   var dateTab=stringDate.split(" ");
   return dateTab[1]+' '+dateTab[2].replace(regExp, " ") + ' ';
+};
+
+// Remplissage du buffer et écriture sur disque en fin d'envoi
+var bufferMessage = function (msg) {
+    console.log(msg);
+    messages += (msg+"\n");
+    if (msg.lastIndexOf('injection stop') > -1) {
+        fs.appendFile(fileName, messages.toString(), function (err) {
+            if (err) {
+                return console.log(err);
+            } else {
+                console.log('write');
+            }
+
+            // console.log("The file was saved!",fileName);
+        });
+    }
 };
