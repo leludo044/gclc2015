@@ -26,8 +26,7 @@ var dgram = require('dgram');
 var os = require('os');
 var fs = require('fs');
 
-//var fileName = "/opt/gclc/gclc.log";
-var fileName = "./gclc.log";
+var fileName = "/opt/gclc/gclc.log";
 
 var initialTimestamp = null;  
 var initialDate = "";
@@ -84,15 +83,10 @@ var formatDay = function (date) {
 
 // Remplissage du buffer et écriture sur disque en fin d'envoi
 var bufferMessage = function (msg) {
-    console.log(msg);
     messages += (msg+"\n");
     if (msg.lastIndexOf('injection stop') > -1) {
         fs.appendFile(fileName, messages.toString(), function (err) {
-            if (err) {
-                return console.log(err);
-            } else {
-                console.log('write');
-            }
+            if (err) throw err
 
             // console.log("The file was saved!",fileName);
         });
