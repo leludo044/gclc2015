@@ -20,7 +20,7 @@ client.bind(PORT) ;
 function convertDate(msg, callback){
   var tab = msg.split(':');
   //console.log(tab)
-  var message = 'Dec  3 '+new Date(parseInt(tab[0])*1000).toLocaleTimeString()+' '+tab[1];
+  var message = formatDay()+" "+new Date(parseInt(tab[0])*1000).toLocaleTimeString()+' '+tab[1];
   //console.log(message);
   callback(message);
 }
@@ -35,3 +35,18 @@ function writeMessage(msg){
   }); 
   
 }
+
+var formatDay = function () {
+
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var d = new Date();
+    var day = d.getDate();
+
+    var formatedDay = months[d.getMonth()] + " ";
+    if (day < 10) {
+        formatedDay += " " + d.getDate();
+    } else {
+        formatedDay += d.getDate();
+    }
+    return formatedDay ;
+};
