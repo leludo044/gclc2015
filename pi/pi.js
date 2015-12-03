@@ -27,9 +27,6 @@ var DELAY =2000;
 // var HOST_SERVER = '51.255.62.78';
 // var DELAY =250000;
 
-
-var DELAY = 250000;
-
 var dgram = require('dgram');
 var comp = require('./compress');
 
@@ -58,6 +55,7 @@ client.on('message', function (msg, rinfo) {
     //initialisation d'un t0 (initialTime)
     if (dataToSend === ''){
         //Délai de 4min10s pour envoyer les données concaténées et compressées.
+        console.log('DELAY:',DELAY);
         setTimeout(compressedAndSendDatas, DELAY);
         console.log('First message received');
         initialTime = Math.floor(new Date() / 1000);
