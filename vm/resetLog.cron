@@ -1,0 +1,3 @@
+#Purge du fichier de log toutes les 15 minutes : cat resetLog.cron | crontab -
+14,29,44,59 * * * * rm /opt/gclc/gclc.log
+
