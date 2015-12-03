@@ -28,7 +28,8 @@ var fs = require('fs');
 
 var fileName = "/opt/gclc/gclc.log";
 
-uncompress = require('compress-buffer').uncompress;
+var zlib = require('zlib');
+
 
 var client = dgram.createSocket('udp4');
 client.on('message', function(msg, rinfo) {
@@ -39,15 +40,16 @@ client.on('message', function(msg, rinfo) {
 client.bind(PORT) ;
 
 //Fonction de réception des messages :
-function convertDate(compressedMsg, callback){
+function convertDate(msg, callback){
 
   console.log('Reception');
 
-  var msg = uncompress(compressedMsg);
+  // var msg = uncompress(compressedMsg);
 
-  var index = msg.indexOf(':');
-
+  var index = msg.indexOf('£');
+  console.log('msg',msg);
   var initialTimestamp = parseInt(msg.substring(0,index))*1000;
+  console.log('initialTimestamp',initialTimestamp);
   var initialDate = formatDay(new Date(initialTimestamp));
 
   // console.log('msgTimeStamp', msgTimeStamp);
@@ -81,12 +83,12 @@ function convertDate(compressedMsg, callback){
 
 //Fonction d'écriture des messages dans le fichier :
 function writeMessage(msg){
-  fs.write(fileName, msg.toString(), function(err) {
+  fs.writeFile(fileName, msg.toString(), function(err) {
       if(err) {
           return console.log(err);
       }
   
-      // console.log("The file was saved!",fileName);
+      console.log("The file was saved!",fileName);
   }); 
 }
 
@@ -95,5 +97,6 @@ var formatDay = function (date) {
   var regExp = /^0/;
   var stringDate= new String(date);
   var dateTab=stringDate.split(" ");
+  console.log('dateTab',dateTab);
   return dateTab[1]+' '+dateTab[2].replace(regExp, " ") + ' ';
 };
