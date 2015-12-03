@@ -52,7 +52,7 @@ client.on('message', function (msg, rinfo) {
     //initialisation d'un t0 (initialTime)
     if (dataToSend === ''){
         //Délai de 4min10s pour envoyer les données concaténées et compressées.
-        setTimeout(sendDatas, 5000);
+        setTimeout(sendDatas, 250000);
         console.log('First message received');
         initialTime = Math.floor(new Date() / 1000);
         dataToSend = initialTime.toString() + ':';

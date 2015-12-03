@@ -46,7 +46,7 @@ function convertDate(msg, callback){
 
   // var msg = uncompress(compressedMsg);
 
-  var index = msg.indexOf('£');
+  var index = msg.indexOf(':');
   console.log('msg',msg);
   var initialTimestamp = parseInt(msg.substring(0,index))*1000;
   console.log('initialTimestamp',initialTimestamp);
@@ -65,14 +65,18 @@ function convertDate(msg, callback){
   for (var i=0;i<nbMessages;i++)
   {
       var index = messages[i].indexOf('£');
+      console.log('index £',index);
       if (index == -1)
           dataToWrite += messages[i];
       else
       {
-        var msgTimeStamp = parseInt(msg.substring(0,index))*1000;
-        // console.log('msgTimeStamp', msgTimeStamp);
-        var bodyMsg = msg.substring(index+1,msg.length);
-        dataToWrite += initialDate + new Date(initialTimestamp + msgTimeStamp).toLocaleTimeString()+' '+bodyMsg;
+        var msgTimeStamp = parseInt(messages[i].substring(0,index))*1000;
+        console.log('msgTimeStamp', msgTimeStamp);
+        var bodyMsg = messages[i].substring(index+1,messages[i].length);
+        var timestamp = initialDate + new Date(initialTimestamp + msgTimeStamp).toLocaleTimeString();
+        console.log('timestamp ++bodyMsg',(timestamp +' '+bodyMsg))
+        dataToWrite += timestamp +' '+bodyMsg+'\n';
+        console.log('dataToWrite',dataToWrite.length)
       }
   }
 
