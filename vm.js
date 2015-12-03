@@ -53,6 +53,11 @@ function writeMessage(msg){
 
 var formatDay = function (date) {
 
+var regExp = /^0/;
+var stringDate= new String(date);
+var dateTab=stringDate.split(" ");
+return dateTab[1]+' '+dateTab[2].replace(regExp, " ") + ' ';
+/*
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var day = date.getDate();
 
@@ -63,4 +68,5 @@ var formatDay = function (date) {
         formatedDay += date.getDate();
     }
     return formatedDay + " ";
+  */
 };
