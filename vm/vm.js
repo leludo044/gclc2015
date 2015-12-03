@@ -28,8 +28,7 @@ var fs = require('fs');
 
 var fileName = "/opt/gclc/gclc.log";
 
-var initialTimestamp = null;  
-var initialDate = "";
+uncompress = require('compress-buffer').uncompress;
 
 var client = dgram.createSocket('udp4');
 client.on('message', function(msg, rinfo) {
@@ -40,29 +39,49 @@ client.on('message', function(msg, rinfo) {
 client.bind(PORT) ;
 
 //Fonction de réception des messages :
-function convertDate(msg, callback){
+function convertDate(compressedMsg, callback){
 
-  if (msg.indexOf(':') == -1)
+  console.log('Reception');
+
+  var msg = uncompress(compressedMsg);
+
+  var index = msg.indexOf(':');
+
+  var initialTimestamp = parseInt(msg.substring(0,index))*1000;
+  var initialDate = formatDay(new Date(initialTimestamp));
+
+  // console.log('msgTimeStamp', msgTimeStamp);
+  var data = msg.substring(index+1,msg.length);
+
+  var messages = data.split('\n');
+  var nbMessages = messages.length;
+
+  var dataToWrite = '';
+
+  console.log('Transformation des donnees');
+
+  for (var i=0;i<nbMessages;i++)
   {
-    initialTimestamp = parseInt(msg) * 1000;
-    // console.log('initialTimestamp',initialTimestamp);
-    initialDate = formatDay(new Date(initialTimestamp));
-
-    convertDate = function(msg, callback) {
-      var index = msg.indexOf(':');
-      var msgTimeStamp = parseInt(msg.substring(0,index))*1000;
-      // console.log('msgTimeStamp', msgTimeStamp);
-      var bodyMsg = msg.substring(index+1,msg.length);
-      var message = initialDate + new Date(initialTimestamp + msgTimeStamp).toLocaleTimeString()+' '+bodyMsg;
-      //console.log(message);
-      callback(message);
-    }
+      var index = messages[i].indexOf('£');
+      if (index == -1)
+          dataToWrite += messages[i];
+      else
+      {
+        var msgTimeStamp = parseInt(msg.substring(0,index))*1000;
+        // console.log('msgTimeStamp', msgTimeStamp);
+        var bodyMsg = msg.substring(index+1,msg.length);
+        dataToWrite += initialDate + new Date(initialTimestamp + msgTimeStamp).toLocaleTimeString()+' '+bodyMsg;
+      }
   }
+
+  console.log('Donnees transformees : ' + dataToWrite);
+
+  callback(dataToWrite);
 }
 
 //Fonction d'écriture des messages dans le fichier :
 function writeMessage(msg){
-  fs.appendFile(fileName, msg.toString(), function(err) {
+  fs.write(fileName, msg.toString(), function(err) {
       if(err) {
           return console.log(err);
       }
