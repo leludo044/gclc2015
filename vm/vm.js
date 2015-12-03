@@ -73,6 +73,7 @@ function convertDate(msg, callback){
       //console.log('index £',indexTS);
       if (indexTS == -1){
           //Gestion des message avec retour chariot
+          dataToWrite = dataToWrite.substring(0, dataToWrite.length-1)+'#012';
           dataToWrite += enc(message)+'\n';
       } else {
         //Gestion du début du message avant retour chariot (ou sans retour chariot)
