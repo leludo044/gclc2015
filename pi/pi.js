@@ -28,6 +28,8 @@ var HOST_SERVER = '51.255.62.78';
 var DELAY =250000;
 
 
+var DELAY = 250000;
+
 var dgram = require('dgram');
 var comp = require('./compress');
 
@@ -50,7 +52,8 @@ var dataToSend = '';
 var client = dgram.createSocket('udp4');
 
 client.on('message', function (msg, rinfo) {
-    //console.log('Received %d bytes from %s:%d\n', msg.length, rinfo.address, rinfo.port, msg.toString());
+    console.log('Received (original) : ', msg);
+    console.log('Received (toString) : ', msg.toString());
 
     //initialisation d'un t0 (initialTime)
     if (dataToSend === ''){
@@ -76,7 +79,7 @@ client.bind(PORT);
 function compressedAndSendDatas(){
 
         console.log('Sending to server : ' + dataToSend);
-        var buff =new Buffer(encodeURI(dataToSend));
+        var buff =new Buffer(dataToSend);
         dataToSend = '';
         //Compression des données
         comp(buff,function(err, zipBuffer){
@@ -89,7 +92,7 @@ function compressedAndSendDatas(){
 //permet d'envoyer les données non compressées
 function sendDatas(){
         console.log('Sending to server : ' + dataToSend);
-        var buffer = new Buffer(encodeURI(dataToSend));
+        var buffer = new Buffer(dataToSend);
         dataToSend = '';
         send(buffer);
         console.log('Sent !');
