@@ -8,7 +8,7 @@ module.exports = (function() {
         for (var index = 0; index < text.length; index++) {
             var c = text[index];
             var code = c.charCodeAt(0);
-            if(code<=32){
+            if(code<32){
                 var x = (code).toString(8);
                 //console.log(code,x)
                 if(x<10){
