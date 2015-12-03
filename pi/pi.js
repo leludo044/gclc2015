@@ -22,10 +22,10 @@ var PORT = 514;
 var HOST = '0.0.0.0';
 
 var PORT_SERVER = 5140;
-// var HOST_SERVER = '127.0.0.1';
-// var DELAY =2000;
-var HOST_SERVER = '51.255.62.78';
-var DELAY =250000;
+var HOST_SERVER = '127.0.0.1';
+var DELAY =2000;
+// var HOST_SERVER = '51.255.62.78';
+// var DELAY =250000;
 
 
 var DELAY = 250000;

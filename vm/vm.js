@@ -30,6 +30,7 @@ var fileName = "/opt/gclc/gclc.log";
 
 var uncomp = require('./uncompress');
 
+var enc = require('./encodechar');
 
 var client = dgram.createSocket('udp4');
 client.on('message', function(msg, rinfo) {
@@ -72,7 +73,7 @@ function convertDate(msg, callback){
       console.log('index £',indexTS);
       if (indexTS == -1){
           //Gestion des message avec retour chariot
-          dataToWrite += message+'\n';
+          dataToWrite += enc(message)+'\n';
       } else {
         //Gestion du début du message avant retour chariot (ou sans retour chariot)
         //TODO caractères spéciaux
@@ -80,7 +81,7 @@ function convertDate(msg, callback){
         //Reconstitution du timestamp
         var timestamp = buildTimestamp(message,indexTS,initialTimestamp);
         var bodyMsg = message.substring(indexTS+1,message.length);
-        dataToWrite += initialDate + timestamp +' '+bodyMsg;
+        dataToWrite += initialDate + timestamp +' '+enc(bodyMsg);
         console.log('dataToWrite',dataToWrite.length)
       }
   }
