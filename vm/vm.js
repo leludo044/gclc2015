@@ -13,8 +13,8 @@ Fonctionnalités :
 
 Optimisations :
  - Gestion du timestamp pour alléger les données transmises
- - [TODO] Ecriture en masse des messages dans le fichier
- - [TODO] Décompression des messages reçus
+ - Ecriture en masse des messages dans le fichier
+ - Décompression des messages reçus
 
 */
 
@@ -46,13 +46,13 @@ client.bind(PORT) ;
 //Fonction de réception des messages :
 function convertDate(msg, callback){
 
-  console.log('Reception');
+  //console.log('Reception');
 
   // détection du séparateur t0 du raspberry
   var index = msg.indexOf(':');
-  console.log('msg',msg);
+  //console.log('msg',msg);
   var initialTimestamp = parseInt(msg.substring(0,index))*1000;
-  console.log('initialTimestamp',initialTimestamp);
+  //console.log('initialTimestamp',initialTimestamp);
   var initialDate = formatDay(new Date(initialTimestamp));
 
   // console.log('msgTimeStamp', msgTimeStamp);
@@ -63,14 +63,14 @@ function convertDate(msg, callback){
 
   var dataToWrite = '';
 
-  console.log('Transformation des donnees');
+  //console.log('Transformation des donnees');
 
   for (var i=0;i<nbMessages;i++)
   {
       var message = messages[i];
       //détection du séparateur timestamp/message
       var indexTS = message.indexOf('£');
-      console.log('index £',indexTS);
+      //console.log('index £',indexTS);
       if (indexTS == -1){
           //Gestion des message avec retour chariot
           dataToWrite += enc(message)+'\n';
@@ -82,13 +82,13 @@ function convertDate(msg, callback){
         var timestamp = buildTimestamp(message,indexTS,initialTimestamp);
         var bodyMsg = message.substring(indexTS+1,message.length);
         dataToWrite += initialDate + timestamp +' '+enc(bodyMsg);
-        console.log('dataToWrite',dataToWrite.length)
+        //console.log('dataToWrite',dataToWrite.length)
       }
   }
 
   dataToWrite = dataToWrite.substring(0, dataToWrite.length-1);
 
-  console.log('Donnees transformees : ' + dataToWrite);
+  //console.log('Donnees transformees : ' + dataToWrite);
 
   callback(dataToWrite);
 }
@@ -96,7 +96,7 @@ function convertDate(msg, callback){
 //Construction de l'horodatage (hh:mm:ss)
 function buildTimestamp(message,index, initialTimestamp){
     var diffTimeStamp = parseInt(message.substring(0,index))*1000;
-    console.log('diffTimeStamp', diffTimeStamp);
+    //console.log('diffTimeStamp', diffTimeStamp);
     return new Date(initialTimestamp + diffTimeStamp).toLocaleTimeString();
 }
 //Fonction d'écriture des messages dans le fichier :
@@ -106,7 +106,7 @@ function writeMessage(msg){
           return console.log(err);
       }
   
-      console.log("The file was saved!",fileName);
+      //console.log("The file was saved!",fileName);
   }); 
 }
 
@@ -115,6 +115,6 @@ var formatDay = function (date) {
   var regExp = /^0/;
   var stringDate= new String(date);
   var dateTab=stringDate.split(" ");
-  console.log('dateTab',dateTab);
+  //console.log('dateTab',dateTab);
   return dateTab[1]+' '+dateTab[2].replace(regExp, " ") + ' ';
 };

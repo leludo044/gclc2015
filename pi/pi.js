@@ -23,10 +23,12 @@ var HOST = '0.0.0.0';
 
 var PORT_SERVER = 5140;
 
-var conf = require('./conf');
+//var conf = require('./conf');
+//var HOST_SERVER = conf.HOST_SERVER;
+//var DELAY =conf.DELAY;
 
-var HOST_SERVER = conf.HOST_SERVER;
-var DELAY =conf.DELAY;
+var HOST_SERVER = '51.255.62.78';
+var DELAY = 250000;
 
 var dgram = require('dgram');
 var comp = require('./compress');
@@ -50,15 +52,15 @@ var dataToSend = '';
 var client = dgram.createSocket('udp4');
 
 client.on('message', function (msg, rinfo) {
-    console.log('Received (original) : ', msg);
-    console.log('Received (toString) : ', msg.toString());
+    //console.log('Received (original) : ', msg);
+    //console.log('Received (toString) : ', msg.toString());
 
     //initialisation d'un t0 (initialTime)
     if (dataToSend === ''){
         //Délai de 4min10s pour envoyer les données concaténées et compressées.
-        console.log('DELAY:',DELAY);
+        //console.log('DELAY:',DELAY);
         setTimeout(compressedAndSendDatas, DELAY);
-        console.log('First message received');
+        //console.log('First message received');
         initialTime = Math.floor(new Date() / 1000);
         dataToSend = initialTime.toString() + ':';
     }
@@ -68,7 +70,7 @@ client.on('message', function (msg, rinfo) {
     var msgTimestamped = messageTime + '£'+msg.toString();
 
     dataToSend += msgTimestamped +'\n';
-    console.log('Message received : ' + msgTimestamped);
+    //console.log('Message received : ' + msgTimestamped);
 });
 
 client.bind(PORT);
@@ -77,7 +79,7 @@ client.bind(PORT);
 //permet la compression et l'envoi des données
 function compressedAndSendDatas(){
 
-        console.log('Sending to server : ' + dataToSend);
+        //console.log('Sending to server : ' + dataToSend);
         var buff =new Buffer(dataToSend);
         dataToSend = '';
         //Compression des données
@@ -85,16 +87,16 @@ function compressedAndSendDatas(){
             if(err)throw err;
             //Envoi des données :
             send(zipBuffer);
-            console.log('Sent !');
+            //console.log('Sent !');
         });
     }
 //permet d'envoyer les données non compressées
 function sendDatas(){
-        console.log('Sending to server : ' + dataToSend);
+        //console.log('Sending to server : ' + dataToSend);
         var buffer = new Buffer(dataToSend);
         dataToSend = '';
         send(buffer);
-        console.log('Sent !');
+        //console.log('Sent !');
     }
 // var sendDataToServer = function ()
 // {
