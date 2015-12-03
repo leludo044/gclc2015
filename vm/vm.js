@@ -28,13 +28,16 @@ var fs = require('fs');
 
 var fileName = "/opt/gclc/gclc.log";
 
-var zlib = require('zlib');
+var uncomp = require('./uncompress');
 
 
 var client = dgram.createSocket('udp4');
 client.on('message', function(msg, rinfo) {
   //console.log('Received %d bytes from %s:%d\n', msg.length, rinfo.address, rinfo.port, msg.toString());
-  convertDate(msg.toString(),writeMessage);
+  uncomp(msg,function(err,msgUnzip){
+    convertDate(decodeURI(msgUnzip.toString()),
+      writeMessage);
+  });
   
 });
 client.bind(PORT) ;
@@ -44,8 +47,7 @@ function convertDate(msg, callback){
 
   console.log('Reception');
 
-  // var msg = uncompress(compressedMsg);
-
+  // détection du séparateur t0 du raspberry
   var index = msg.indexOf(':');
   console.log('msg',msg);
   var initialTimestamp = parseInt(msg.substring(0,index))*1000;
@@ -64,18 +66,21 @@ function convertDate(msg, callback){
 
   for (var i=0;i<nbMessages;i++)
   {
-      var index = messages[i].indexOf('£');
-      console.log('index £',index);
-      if (index == -1)
-          dataToWrite += messages[i];
-      else
-      {
-        var msgTimeStamp = parseInt(messages[i].substring(0,index))*1000;
-        console.log('msgTimeStamp', msgTimeStamp);
-        var bodyMsg = messages[i].substring(index+1,messages[i].length);
-        var timestamp = initialDate + new Date(initialTimestamp + msgTimeStamp).toLocaleTimeString();
-        console.log('timestamp ++bodyMsg',(timestamp +' '+bodyMsg))
-        dataToWrite += timestamp +' '+bodyMsg+'\n';
+      var message = messages[i];
+      //détection du séparateur timestamp/message
+      var indexTS = message.indexOf('£');
+      console.log('index £',indexTS);
+      if (indexTS == -1){
+          //Gestion des message avec retour chariot
+          dataToWrite += message+'\n';
+      } else {
+        //Gestion du début du message avant retour chariot (ou sans retour chariot)
+        //TODO caractères spéciaux
+        
+        //Reconstitution du timestamp
+        var timestamp = buildTimestamp(message,indexTS,initialTimestamp);
+        var bodyMsg = message.substring(indexTS+1,message.length);
+        dataToWrite += initialDate + timestamp +' '+bodyMsg+'\n';
         console.log('dataToWrite',dataToWrite.length)
       }
   }
@@ -85,6 +90,12 @@ function convertDate(msg, callback){
   callback(dataToWrite);
 }
 
+//Construction de l'horodatage (hh:mm:ss)
+function buildTimestamp(message,index, initialTimestamp){
+    var diffTimeStamp = parseInt(message.substring(0,index))*1000;
+    console.log('diffTimeStamp', diffTimeStamp);
+    return new Date(initialTimestamp + diffTimeStamp).toLocaleTimeString();
+}
 //Fonction d'écriture des messages dans le fichier :
 function writeMessage(msg){
   fs.writeFile(fileName, msg.toString(), function(err) {
