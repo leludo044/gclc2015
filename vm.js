@@ -1,3 +1,24 @@
+/*
+
+Green Code Lab Challenge : Team 78 : La Poste #CodePostal
+
+Code dédié au serveur.
+
+Fonctionnalités :
+ - Ecoute UDP sur le port 5140 
+ - Initialisation : Réception d'un timestamp de référence
+ - Réception des messages précédés du nombre de secondes depuis le timestamp de référence
+ - Mise en forme de la date et des messages
+ - Ecriture des messages dans le fichier /opt/gclc/gclc.log
+
+Optimisations :
+ - Gestion du timestamp pour alléger les données transmises
+ - [TODO] Ecriture en masse des messages dans le fichier
+ - [TODO] Décompression des messages reçus
+
+*/
+
+
 var PORT = 5140;
 var HOST = '0.0.0.0';
 
@@ -13,13 +34,12 @@ var initialDate = "";
 var client = dgram.createSocket('udp4');
 client.on('message', function(msg, rinfo) {
   //console.log('Received %d bytes from %s:%d\n', msg.length, rinfo.address, rinfo.port, msg.toString());
-  
   convertDate(msg.toString(),writeMessage);
   
 });
 client.bind(PORT) ;
 
-
+//Fonction de réception des messages :
 function convertDate(msg, callback){
 
   if (msg.indexOf(':') == -1)
@@ -40,6 +60,7 @@ function convertDate(msg, callback){
   }
 }
 
+//Fonction d'écriture des messages dans le fichier :
 function writeMessage(msg){
   fs.appendFile(fileName, msg.toString(), function(err) {
       if(err) {
@@ -48,25 +69,12 @@ function writeMessage(msg){
   
       // console.log("The file was saved!",fileName);
   }); 
-  
 }
 
+//Fonction permettant de calculer la date à afficher :
 var formatDay = function (date) {
-
-var regExp = /^0/;
-var stringDate= new String(date);
-var dateTab=stringDate.split(" ");
-return dateTab[1]+' '+dateTab[2].replace(regExp, " ") + ' ';
-/*
-    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var day = date.getDate();
-
-    var formatedDay = months[date.getMonth()] + " ";
-    if (day < 10) {
-        formatedDay += " " + date.getDate();
-    } else {
-        formatedDay += date.getDate();
-    }
-    return formatedDay + " ";
-  */
+  var regExp = /^0/;
+  var stringDate= new String(date);
+  var dateTab=stringDate.split(" ");
+  return dateTab[1]+' '+dateTab[2].replace(regExp, " ") + ' ';
 };
