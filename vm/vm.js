@@ -58,7 +58,7 @@ function convertDate(msg, callback){
   // console.log('msgTimeStamp', msgTimeStamp);
   var data = msg.substring(index+1,msg.length);
 
-  var messages = data.split('\n');
+  var messages = data.split('$$');
   var nbMessages = messages.length;
 
   var dataToWrite = '';
@@ -81,7 +81,7 @@ function convertDate(msg, callback){
         //Reconstitution du timestamp
         var timestamp = buildTimestamp(message,indexTS,initialTimestamp);
         var bodyMsg = message.substring(indexTS+1,message.length);
-        dataToWrite += initialDate + timestamp +' '+enc(bodyMsg);
+        dataToWrite += initialDate + timestamp +' '+enc(bodyMsg)+'\n';
         //console.log('dataToWrite',dataToWrite.length)
       }
   }
