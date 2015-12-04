@@ -1,0 +1,3 @@
+var l=require("dgram");require("os");var m=require("fs"),n=require("./uncompress");
+l.a("udp4").b("message",function(a){n(a,function(a,p){var b=p.toString(),r=q,f=b.indexOf(":"),k=1E3*parseInt(b.substring(0,f)),d;d=(new String(new Date(k))).split(" ");d=d[1]+" "+d[2].replace(/^0/," ")+" ";for(var b=b.slice(f+1).split("$$"),f=b.length,c="",g=0;g<f;g++)var e=b[g],h=e.indexOf("?"),c=-1==h?c+(e+"\n"):c+(d+(new Date(k+1E3*parseInt(e.substring(0,h)))).toLocaleTimeString()+" "+e.substring(h+1,e.length)+"\n");c=c.slice(0,-1);r(c)})});
+function q(a){m.c("/opt/gclc/gclc.log",a.toString(),function(a){if(a)return console.log(a)})};

@@ -30,6 +30,7 @@ var fileName = "/opt/gclc/gclc.log";
 
 var uncomp = require('./uncompress');
 
+// Pour la gestion des caractères spéciaux  
 //var enc = require('./encodechar');
 
 var client = dgram.createSocket('udp4');
