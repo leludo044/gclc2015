@@ -23,7 +23,6 @@ var PORT = 5140;
 var HOST = '0.0.0.0';
 
 var dgram = require('dgram');
-var os = require('os');
 var fs = require('fs');
 
 var fileName = "/opt/gclc/gclc.log";
