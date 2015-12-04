@@ -59,6 +59,7 @@ client.on('message', function (msg, rinfo) {
     if (dataToSend === ''){
         //Délai de 4min10s pour envoyer les données concaténées et compressées.
         //console.log('DELAY:',DELAY);
+        //setTimeout(sendDatas, DELAY);
         setTimeout(compressedAndSendDatas, DELAY);
         //console.log('First message received');
         initialTime = Math.floor(new Date() / 1000);
@@ -69,8 +70,10 @@ client.on('message', function (msg, rinfo) {
     var messageTime = Math.floor(new Date() / 1000) - initialTime;
     var msgTimestamped = messageTime + '£'+msg.toString();
 
+    msgTimestamped = msgTimestamped.slice(0, -1);
+
     dataToSend += msgTimestamped + '$$';
-    console.log('Message received : ' + msgTimestamped);
+    //console.log('Message received : ' + msgTimestamped);
 });
 
 client.bind(PORT);
@@ -92,11 +95,11 @@ function compressedAndSendDatas(){
     }
 //permet d'envoyer les données non compressées
 function sendDatas(){
-        console.log('Sending to server : ' + dataToSend);
+        //console.log('Sending to server : ' + dataToSend);
         var buffer = new Buffer(dataToSend);
         dataToSend = '';
         send(buffer);
-        console.log('Sent !');
+        //console.log('Sent !');
     }
 // var sendDataToServer = function ()
 // {

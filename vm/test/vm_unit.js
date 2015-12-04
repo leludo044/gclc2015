@@ -2,7 +2,7 @@
 
 Green Code Lab Challenge : Team 78 : La Poste #CodePostal
 
-Code dédié au serveur.
+Code dédié au serveur : Version alternative avec envoi des messages unitairement.
 
 Fonctionnalités :
  - Ecoute UDP sur le port 5140 

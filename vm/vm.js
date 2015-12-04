@@ -30,16 +30,22 @@ var fileName = "/opt/gclc/gclc.log";
 
 var uncomp = require('./uncompress');
 
-var enc = require('./encodechar');
+// Pour la gestion des caractères spéciaux  
+//var enc = require('./encodechar');
 
 var client = dgram.createSocket('udp4');
 client.on('message', function(msg, rinfo) {
   //console.log('Received %d bytes from %s:%d\n', msg.length, rinfo.address, rinfo.port, msg.toString());
+
   uncomp(msg,function(err,msgUnzip){
     convertDate(msgUnzip.toString(),
       writeMessage);
   });
-  
+
+  /*
+  convertDate(msg.toString(),
+      writeMessage);
+  */
 });
 client.bind(PORT) ;
 
@@ -56,7 +62,7 @@ function convertDate(msg, callback){
   var initialDate = formatDay(new Date(initialTimestamp));
 
   // console.log('msgTimeStamp', msgTimeStamp);
-  var data = msg.substring(index+1,msg.length);
+  var data = msg.slice(index+1);
 
   var messages = data.split('$$');
   var nbMessages = messages.length;
@@ -73,7 +79,10 @@ function convertDate(msg, callback){
       //console.log('index £',indexTS);
       if (indexTS == -1){
           //Gestion des message avec retour chariot
-          dataToWrite += enc(message)+'\n';
+          dataToWrite += message+'\n';
+
+          // Traitement des caractères spéciaux
+          //dataToWrite += enc(message)+'\n';
       } else {
         //Gestion du début du message avant retour chariot (ou sans retour chariot)
         //TODO caractères spéciaux
@@ -81,12 +90,16 @@ function convertDate(msg, callback){
         //Reconstitution du timestamp
         var timestamp = buildTimestamp(message,indexTS,initialTimestamp);
         var bodyMsg = message.substring(indexTS+1,message.length);
-        dataToWrite += initialDate + timestamp +' '+enc(bodyMsg)+'\n';
+        dataToWrite += initialDate + timestamp +' '+bodyMsg+'\n';
+        
+        // Pour la gestion des caractères spéciaux  
+        // dataToWrite += initialDate + timestamp +' '+enc(bodyMsg)+'\n';
+        
         //console.log('dataToWrite',dataToWrite.length)
       }
   }
 
-  dataToWrite = dataToWrite.substring(0, dataToWrite.length-1);
+  dataToWrite = dataToWrite.slice(0, -1);
 
   //console.log('Donnees transformees : ' + dataToWrite);
 
