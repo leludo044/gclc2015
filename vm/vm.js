@@ -28,21 +28,23 @@ var fs = require('fs');
 
 var fileName = "/opt/gclc/gclc.log";
 
-//var uncomp = require('./uncompress');
+var uncomp = require('./uncompress');
 
 var enc = require('./encodechar');
 
 var client = dgram.createSocket('udp4');
 client.on('message', function(msg, rinfo) {
   //console.log('Received %d bytes from %s:%d\n', msg.length, rinfo.address, rinfo.port, msg.toString());
-  /*
+  
   uncomp(msg,function(err,msgUnzip){
     convertDate(msgUnzip.toString(),
       writeMessage);
   });
-*/
+
+  /*
   convertDate(msg.toString(),
       writeMessage);
+  */
 });
 client.bind(PORT) ;
 
@@ -59,7 +61,7 @@ function convertDate(msg, callback){
   var initialDate = formatDay(new Date(initialTimestamp));
 
   // console.log('msgTimeStamp', msgTimeStamp);
-  var data = msg.substring(index+1,msg.length);
+  var data = msg.slice(1);
 
   var messages = data.split('$$');
   var nbMessages = messages.length;
