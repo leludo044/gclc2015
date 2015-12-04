@@ -28,18 +28,21 @@ var fs = require('fs');
 
 var fileName = "/opt/gclc/gclc.log";
 
-var uncomp = require('./uncompress');
+//var uncomp = require('./uncompress');
 
 var enc = require('./encodechar');
 
 var client = dgram.createSocket('udp4');
 client.on('message', function(msg, rinfo) {
   //console.log('Received %d bytes from %s:%d\n', msg.length, rinfo.address, rinfo.port, msg.toString());
+  /*
   uncomp(msg,function(err,msgUnzip){
     convertDate(msgUnzip.toString(),
       writeMessage);
   });
-  
+*/
+  convertDate(msg.toString(),
+      writeMessage);
 });
 client.bind(PORT) ;
 

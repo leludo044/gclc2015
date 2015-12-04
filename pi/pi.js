@@ -31,7 +31,7 @@ var HOST_SERVER = '51.255.62.78';
 var DELAY = 250000;
 
 var dgram = require('dgram');
-var comp = require('./compress');
+//var comp = require('./compress');
 
 //Fonction permettant d'envoyer les messages au serveur :
 var send = function (message) {
@@ -59,7 +59,7 @@ client.on('message', function (msg, rinfo) {
     if (dataToSend === ''){
         //Délai de 4min10s pour envoyer les données concaténées et compressées.
         //console.log('DELAY:',DELAY);
-        setTimeout(compressedAndSendDatas, DELAY);
+        setTimeout(sendDatas, DELAY);
         //console.log('First message received');
         initialTime = Math.floor(new Date() / 1000);
         dataToSend = initialTime.toString() + ':';
@@ -72,7 +72,7 @@ client.on('message', function (msg, rinfo) {
     msgTimestamped = msgTimestamped.substring(0, msgTimestamped.length-1);
 
     dataToSend += msgTimestamped + '$$';
-    console.log('Message received : ' + msgTimestamped);
+    //console.log('Message received : ' + msgTimestamped);
 });
 
 client.bind(PORT);
@@ -94,11 +94,11 @@ function compressedAndSendDatas(){
     }
 //permet d'envoyer les données non compressées
 function sendDatas(){
-        console.log('Sending to server : ' + dataToSend);
+        //console.log('Sending to server : ' + dataToSend);
         var buffer = new Buffer(dataToSend);
         dataToSend = '';
         send(buffer);
-        console.log('Sent !');
+        //console.log('Sent !');
     }
 // var sendDataToServer = function ()
 // {
