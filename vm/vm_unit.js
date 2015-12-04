@@ -32,7 +32,7 @@ var enc = require('./encodechar');
 
 var initialTimestamp;
 var initialDate;
-var data;
+var data='';
 console.log('ok')
 var client = dgram.createSocket('udp4');
 console.log('x')
@@ -42,21 +42,24 @@ client.on('message', function (message, rinfo) {
   if(initialDate) { 
       if (msg == '£££'){
         writeMessage(data);
+        initialDate=undefined;
       }else{
         convertDate(msg);
       }
   }else{
+        data='';
         initialTimestamp = parseInt(msg)*1000;
         initialDate = formatDay(new Date(initialTimestamp));
   }
 });
+console.log('kkk')
 client.bind(PORT) ;
 
 //Fonction de réception des messages :
 function convertDate(msg){
-  var indexTS = data.indexOf('£');
+  var indexTS = msg.indexOf('£');
   var timestamp = buildTimestamp(msg,indexTS,initialTimestamp);
-  var bodyMsg = message.substring(indexTS+1,message.length);
+  var bodyMsg = msg.substring(indexTS+1,msg.length);
   data += initialDate + timestamp +' '+ enc(bodyMsg) + '\n';
 }
 
@@ -68,7 +71,8 @@ function buildTimestamp(message,index, initialTimestamp){
 
 //Fonction d'écriture des messages dans le fichier :
 function writeMessage(msg){
-  fs.writeFile(fileName, msg.toString(), function(err) {
+  console.log('writeFile',msg.slice(0,-1));
+  fs.writeFile(fileName, msg.toString().slice(0,-1), function(err) {
       if(err) {
           return console.log(err);
       }

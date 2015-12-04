@@ -31,28 +31,29 @@ var DELAY =conf.DELAY;
 var dgram = require('dgram');
 var comp = require('./compress');
 
-var sender;
+// var sender;
 
 //initialisation du socket d'envoi
 function initSender(){
     console.log('initSender')
-    sender = dgram.createSocket('udp4');
 }
 
 //Fonction permettant d'envoyer les messages au serveur :
 var send = function (message) {
-    console.log('send',message,PORT_SERVER,HOST_SERVER);
+    // console.log('send',message,PORT_SERVER,HOST_SERVER);
+    var sender = dgram.createSocket('udp4');
     // var message = compress(uncompressedMessage);
-    sender.send(message, 0, message.length, PORT_SERVER, HOST_SERVER, function (err, bytes) {
-        console.log('err',err)
+   sender.send(message, 0, message.length, PORT_SERVER, HOST_SERVER, function(err, bytes) {
+        // console.log('err',err)
         if (err) throw err;
+         sender.close();
         //console.log('UDP message sent to ' + HOST_SERVER + ':' + PORT_SERVER);
     });
 };
 
 //fermeture de la socket d'envoi
 function closeSender(){
-        sender.close();
+        // sender.close();
 }
 //Mémorisation d'un timestamp de référence, pour n'envoyer que le delta lors de la transmission des messages :
 var initialTime = 0;
@@ -66,15 +67,16 @@ console.log('DELAY:',DELAY);
 //écoute des messages du socket
 var first = true;
 client.on('message', function (msg, rinfo) {
-    console.log('Received (original) : ', msg);
-    console.log('Received (toString) : ', msg.toString());
+    // console.log('Received (original) : ', msg);
+    // console.log('Received (toString) : ', msg.toString());
     //initialisation d'un t0 (initialTime)
     if (first){
+        // console.log('first')
         first=false;
         dataToSend=[];
         //Délai de 4min10s pour envoyer les données concaténées et compressées.
         setTimeout(sendDatas, DELAY);
-        console.log('First message received');
+        // console.log('First message received');
         initialTime = Math.floor(new Date() / 1000);
         dataToSend.push(initialTime.toString());
     }
@@ -82,7 +84,7 @@ client.on('message', function (msg, rinfo) {
     //Mise en forme des messages (ajout du timestamp)
     var messageTime = Math.floor(new Date() / 1000) - initialTime;
     var msgTimestamped = messageTime + '£'+msg.toString();
-    console.log('Message stock : ' + msgTimestamped);
+    // console.log('Message stock : ' + msgTimestamped);
     dataToSend.push(msgTimestamped);
 
 });
