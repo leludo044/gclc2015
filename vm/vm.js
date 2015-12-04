@@ -21,6 +21,11 @@ Optimisations :
 
 var PORT = 5140;
 var HOST = '0.0.0.0';
+var INITIAL_TIME_SEPARATOR = '£';
+var MESSAGE_SEPARATOR = '$$';
+var MESSAGE_TIME_SEPARATOR = ':';
+var STRING_EMPTY = '';
+var STRING_SPACE = ' ';
 
 var dgram = require('dgram');
 var fs = require('fs');
@@ -50,22 +55,22 @@ client.bind(PORT) ;
 function convertDate(msg, callback){
 
   // détection du séparateur t0 du raspberry
-  var index = msg.indexOf(':');
+  var index = msg.indexOf(MESSAGE_TIME_SEPARATOR);
   var initialTimestamp = parseInt(msg.substring(0,index))*1000;
   var initialDate = formatDay(new Date(initialTimestamp));
   var data = msg.slice(index+1);
 
-  var messages = data.split('$$');
+  var messages = data.split(MESSAGE_SEPARATOR);
   var nbMessages = messages.length;
 
-  var dataToWrite = '';
+  var dataToWrite = STRING_EMPTY;
 
   for (var i=0;i<nbMessages;i++)
   {
       var message = messages[i];
 
       //détection du séparateur timestamp/message
-      var indexTS = message.indexOf('£');
+      var indexTS = message.indexOf(INITIAL_TIME_SEPARATOR);
 
       if (indexTS == -1){
           //Gestion des message contenant le séparateur
@@ -79,7 +84,7 @@ function convertDate(msg, callback){
         //Reconstitution du timestamp
         var timestamp = buildTimestamp(message,indexTS,initialTimestamp);
         var bodyMsg = message.substring(indexTS+1,message.length);
-        dataToWrite += initialDate + timestamp +' '+bodyMsg;
+        dataToWrite += initialDate + timestamp +STRING_SPACE+bodyMsg;
         
         // Pour la gestion des caractères spéciaux  
         // dataToWrite += initialDate + timestamp +' '+enc(bodyMsg)+'\n';
@@ -112,6 +117,6 @@ function writeMessage(msg){
 var formatDay = function (date) {
   var regExp = /^0/;
   var stringDate= new String(date);
-  var dateTab=stringDate.split(" ");
-  return dateTab[1]+' '+dateTab[2].replace(regExp, " ") + ' ';
+  var dateTab=stringDate.split(STRING_SPACE);
+  return dateTab[1]+STRING_SPACE+dateTab[2].replace(regExp, STRING_SPACE) + STRING_SPACE;
 };

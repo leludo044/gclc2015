@@ -26,6 +26,10 @@ var HOST = '0.0.0.0';
 var PORT_SERVER = 5140;
 var HOST_SERVER = '51.255.62.78';
 var DELAY = 250000;
+var INITIAL_TIME_SEPARATOR = '£';
+var MESSAGE_SEPARATOR = '$$';
+var MESSAGE_TIME_SEPARATOR = ':';
+var STRING_EMPTY = '';
 
 var dgram = require('dgram');
 var comp = require('./compress');
@@ -43,7 +47,7 @@ var send = function (message) {
 
 //Mémorisation d'un timestamp de référence, pour n'envoyer que le delta lors de la transmission des messages :
 var initialTime = 0;
-var dataToSend = '';
+var dataToSend = STRING_EMPTY;
 
 // Creation ecouteur
 var client = dgram.createSocket('udp4');
@@ -52,7 +56,7 @@ client.on('message', function (msg, rinfo) {
     //console.log('Received (toString) : ', msg.toString());
 
     //initialisation d'un t0 (initialTime)
-    if (dataToSend === ''){
+    if (dataToSend === STRING_EMPTY){
         // Cas du premier message du cycle
         //Délai de 4min10s pour envoyer les données concaténées et compressées.
         //console.log('DELAY:',DELAY);
@@ -60,16 +64,16 @@ client.on('message', function (msg, rinfo) {
         setTimeout(compressedAndSendDatas, DELAY);
         //console.log('First message received');
         initialTime = Math.floor(new Date() / 1000);
-        dataToSend = initialTime.toString() + ':';
+        dataToSend = initialTime.toString() + MESSAGE_TIME_SEPARATOR;
     }
 
     //Mise en forme des messages (ajout du timestamp)
     var messageTime = Math.floor(new Date() / 1000) - initialTime;
-    var msgTimestamped = messageTime + '£'+msg.toString();
+    var msgTimestamped = messageTime + INITIAL_TIME_SEPARATOR + msg.toString();
 
     //msgTimestamped = msgTimestamped.slice(0, -1);
 
-    dataToSend += msgTimestamped + '$$';
+    dataToSend += msgTimestamped + MESSAGE_SEPARATOR;
     //console.log('Message received : ' + msgTimestamped);
 });
 
@@ -81,7 +85,7 @@ function compressedAndSendDatas(){
 
         //console.log('Sending to server : ' + dataToSend);
         var buff =new Buffer(dataToSend);
-        dataToSend = '';
+        dataToSend = STRING_EMPTY;
         //Compression des données
         comp(buff,function(err, zipBuffer){
             if(err)throw err;
@@ -95,7 +99,7 @@ function compressedAndSendDatas(){
 function sendDatas(){
         //console.log('Sending to server : ' + dataToSend);
         var buffer = new Buffer(dataToSend);
-        dataToSend = '';
+        dataToSend = STRING_EMPTY;
         send(buffer);
         //console.log('Sent !');
     }
