@@ -23,22 +23,22 @@ var PORT = 5140;
 var HOST = '0.0.0.0';
 
 var dgram = require('dgram');
-var os = require('os');
 var fs = require('fs');
 
 var fileName = "/opt/gclc/gclc.log";
 
-var uncomp = require('./uncompress');
 
 var enc = require('./encodechar');
 
 var initialTimestamp;
 var initialDate;
 var data;
-
+console.log('ok')
 var client = dgram.createSocket('udp4');
-client.on('message', function(message){
+console.log('x')
+client.on('message', function (message, rinfo) {
   var msg = message.toString();
+  console.log('msg',msg);
   if(initialDate) { 
       if (msg == '£££'){
         writeMessage(data);
