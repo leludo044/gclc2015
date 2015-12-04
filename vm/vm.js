@@ -79,6 +79,9 @@ function convertDate(msg, callback){
       if (indexTS == -1){
           //Gestion des message avec retour chariot
           dataToWrite += message+'\n';
+
+          // Traitement des caractères spéciaux
+          //dataToWrite += enc(message)+'\n';
       } else {
         //Gestion du début du message avant retour chariot (ou sans retour chariot)
         //TODO caractères spéciaux
@@ -87,6 +90,10 @@ function convertDate(msg, callback){
         var timestamp = buildTimestamp(message,indexTS,initialTimestamp);
         var bodyMsg = message.substring(indexTS+1,message.length);
         dataToWrite += initialDate + timestamp +' '+bodyMsg+'\n';
+        
+        // Pour la gestion des caractères spéciaux  
+        // dataToWrite += initialDate + timestamp +' '+enc(bodyMsg)+'\n';
+        
         //console.log('dataToWrite',dataToWrite.length)
       }
   }
