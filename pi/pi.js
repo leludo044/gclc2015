@@ -18,15 +18,12 @@ Optimisations :
 
 */
 
+// Ecouteur
 var PORT = 514;
 var HOST = '0.0.0.0';
 
+// Emetteur
 var PORT_SERVER = 5140;
-
-//var conf = require('./conf');
-//var HOST_SERVER = conf.HOST_SERVER;
-//var DELAY =conf.DELAY;
-
 var HOST_SERVER = '51.255.62.78';
 var DELAY = 250000;
 
@@ -35,8 +32,7 @@ var comp = require('./compress');
 
 //Fonction permettant d'envoyer les messages au serveur :
 var send = function (message) {
-    // var message = compress(uncompressedMessage);
-
+    // Creation du socket UDP
     var sender = dgram.createSocket('udp4');
     sender.send(message, 0, message.length, PORT_SERVER, HOST_SERVER, function (err, bytes) {
         if (err) throw err;
@@ -49,14 +45,15 @@ var send = function (message) {
 var initialTime = 0;
 var dataToSend = '';
 
+// Creation ecouteur
 var client = dgram.createSocket('udp4');
-
 client.on('message', function (msg, rinfo) {
     //console.log('Received (original) : ', msg);
     //console.log('Received (toString) : ', msg.toString());
 
     //initialisation d'un t0 (initialTime)
     if (dataToSend === ''){
+        // Cas du premier message du cycle
         //Délai de 4min10s pour envoyer les données concaténées et compressées.
         //console.log('DELAY:',DELAY);
         //setTimeout(sendDatas, DELAY);
@@ -93,6 +90,7 @@ function compressedAndSendDatas(){
             //console.log('Sent !');
         });
     }
+
 //permet d'envoyer les données non compressées
 function sendDatas(){
         //console.log('Sending to server : ' + dataToSend);
@@ -101,9 +99,3 @@ function sendDatas(){
         send(buffer);
         //console.log('Sent !');
     }
-// var sendDataToServer = function ()
-// {
-//     //Envoi des données :
-//     send(new Buffer(dataToSend.toString()));
-//     dataToSend = '';
-// };
