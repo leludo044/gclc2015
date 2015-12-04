@@ -1,0 +1,26 @@
+{
+  "name": "vm-debian",
+  "version": "1.0.0",
+  "description": "GCLChallenge for debian VM",
+  "main": "vm.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://codepostal@bitbucket.org/codepostal/gclc2015.git"
+  },
+  "keywords": [
+    "Green",
+    "Code",
+    "Lab",
+    "Challenge"
+  ],
+  "author": "CodePostal Team",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/codepostal/gclc2015#readme",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-minify": "0.0.5"
+  }
+}
