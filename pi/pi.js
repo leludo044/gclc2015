@@ -59,6 +59,7 @@ client.on('message', function (msg, rinfo) {
     if (dataToSend === ''){
         //Délai de 4min10s pour envoyer les données concaténées et compressées.
         //console.log('DELAY:',DELAY);
+        //setTimeout(sendDatas, DELAY);
         setTimeout(compressedAndSendDatas, DELAY);
         //console.log('First message received');
         initialTime = Math.floor(new Date() / 1000);

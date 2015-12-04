@@ -35,7 +35,7 @@ var enc = require('./encodechar');
 var client = dgram.createSocket('udp4');
 client.on('message', function(msg, rinfo) {
   //console.log('Received %d bytes from %s:%d\n', msg.length, rinfo.address, rinfo.port, msg.toString());
-  
+
   uncomp(msg,function(err,msgUnzip){
     convertDate(msgUnzip.toString(),
       writeMessage);
@@ -61,7 +61,7 @@ function convertDate(msg, callback){
   var initialDate = formatDay(new Date(initialTimestamp));
 
   // console.log('msgTimeStamp', msgTimeStamp);
-  var data = msg.slice(1);
+  var data = msg.slice(index+1);
 
   var messages = data.split('$$');
   var nbMessages = messages.length;
