@@ -69,8 +69,8 @@ client.on('message', function (msg, rinfo) {
     var messageTime = Math.floor(new Date() / 1000) - initialTime;
     var msgTimestamped = messageTime + '£'+msg.toString();
 
-    dataToSend += msgTimestamped +'\n\r';
-    //console.log('Message received : ' + msgTimestamped);
+    dataToSend += msgTimestamped;
+    console.log('Message received : ' + msgTimestamped);
 });
 
 client.bind(PORT);
@@ -92,11 +92,11 @@ function compressedAndSendDatas(){
     }
 //permet d'envoyer les données non compressées
 function sendDatas(){
-        //console.log('Sending to server : ' + dataToSend);
+        console.log('Sending to server : ' + dataToSend);
         var buffer = new Buffer(dataToSend);
         dataToSend = '';
         send(buffer);
-        //console.log('Sent !');
+        console.log('Sent !');
     }
 // var sendDataToServer = function ()
 // {

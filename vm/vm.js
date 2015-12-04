@@ -58,7 +58,7 @@ function convertDate(msg, callback){
   // console.log('msgTimeStamp', msgTimeStamp);
   var data = msg.substring(index+1,msg.length);
 
-  var messages = data.split('\n\r');
+  var messages = data.split('\n');
   var nbMessages = messages.length;
 
   var dataToWrite = '';
@@ -73,7 +73,7 @@ function convertDate(msg, callback){
       //console.log('index £',indexTS);
       if (indexTS == -1){
           //Gestion des message avec retour chariot
-          dataToWrite += enc(message)+'\n\r';
+          dataToWrite += enc(message)+'\n';
       } else {
         //Gestion du début du message avant retour chariot (ou sans retour chariot)
         //TODO caractères spéciaux
