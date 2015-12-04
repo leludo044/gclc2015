@@ -78,7 +78,7 @@ function convertDate(msg, callback){
       //console.log('index £',indexTS);
       if (indexTS == -1){
           //Gestion des message avec retour chariot
-          dataToWrite += message+'\n';
+          dataToWrite += message;
 
           // Traitement des caractères spéciaux
           //dataToWrite += enc(message)+'\n';
@@ -89,7 +89,7 @@ function convertDate(msg, callback){
         //Reconstitution du timestamp
         var timestamp = buildTimestamp(message,indexTS,initialTimestamp);
         var bodyMsg = message.substring(indexTS+1,message.length);
-        dataToWrite += initialDate + timestamp +' '+bodyMsg+'\n';
+        dataToWrite += initialDate + timestamp +' '+bodyMsg;
         
         // Pour la gestion des caractères spéciaux  
         // dataToWrite += initialDate + timestamp +' '+enc(bodyMsg)+'\n';
