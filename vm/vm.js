@@ -89,7 +89,7 @@ function convertDate(msg, callback){
       }
   }
 
-  dataToWrite = dataToWrite.substring(0, dataToWrite.length-1);
+  dataToWrite = dataToWrite.slice(0, -1);
 
   //console.log('Donnees transformees : ' + dataToWrite);
 

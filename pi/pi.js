@@ -69,7 +69,7 @@ client.on('message', function (msg, rinfo) {
     var messageTime = Math.floor(new Date() / 1000) - initialTime;
     var msgTimestamped = messageTime + '£'+msg.toString();
 
-    msgTimestamped = msgTimestamped.substring(0, msgTimestamped.length-1);
+    msgTimestamped = msgTimestamped.slice(0, -1);
 
     dataToSend += msgTimestamped + '$$';
     //console.log('Message received : ' + msgTimestamped);
